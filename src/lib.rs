@@ -59,7 +59,7 @@ pub fn derive_rocket_governor_fn(input: TokenStream) -> TokenStream {
         }
 
         #[::rocket::catch(429)]
-        fn #catcher_method<'c>(request: &'c ::rocket::Request) -> &'c ::rocket_governor::LimitError {
+        pub fn #catcher_method<'c>(request: &'c ::rocket::Request) -> &'c ::rocket_governor::LimitError {
             #struct_name::rocket_governor_catcher(request)
         }
     };
@@ -104,7 +104,7 @@ pub fn derive_rocket_governor_with_member_fn(input: TokenStream) -> TokenStream 
         }
 
         #[::rocket::catch(429)]
-        fn #catcher_method<'c>(request: &'c ::rocket::Request) -> &'c ::rocket_governor::LimitError {
+        pub fn #catcher_method<'c>(request: &'c ::rocket::Request) -> &'c ::rocket_governor::LimitError {
             #struct_name::rocket_governor_catcher(request)
         }
     };
