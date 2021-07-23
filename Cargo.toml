@@ -1,9 +1,9 @@
 [package]
 name = "rocket-governor-derive"
-version = "0.0.1-rc.3"
+version = "0.0.1-rc.4"
 edition = "2018"
 license = "MIT OR Apache-2.0"
-description = "Implementation of Governor rate limiter for Rocket - macro part"
+description = "Unmaintained"
 documentation = "https://docs.rs/rocket-governor-derive"
 homepage = "https://github.com/kolbma/rocket-governor-derive"
 repository = "https://github.com/kolbma/rocket-governor-derive"
@@ -13,8 +13,6 @@ categories = ["web-programming"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-proc-macro = true
 
 [dependencies]
-quote = "1.0"
-syn = "1.0"
+rocket-governor = "^0.0.1-rc.9"
