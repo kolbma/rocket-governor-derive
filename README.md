@@ -2,103 +2,10 @@
 [![crates.io](https://img.shields.io/crates/v/rocket-governor-derive)](https://crates.io/crates/rocket-governor-derive)
 [![docs](https://docs.rs/rocket-governor-derive/badge.svg)](https://docs.rs/rocket-governor-derive)
 
-## Description
+## Attention this is unmaintained
 
-Implementation of the [Governor](https://github.com/antifuchs/governor.git) rate limiter for [Rocket](https://rocket.rs) web framework.
-
-Rate limiting is used to control the rate requests are received and handled by an endpoint of the web application 
-or web service.
-
-## Rocket specific features
-
-Define as many rate limits with [Quota](https://docs.rs/governor/latest/governor/struct.Quota.html) of Governor
-as you like and need in your Rocket web application/service.  
-It is implemented as a Rocket [Request Guard](https://rocket.rs/v0.5-rc/guide/requests/#request-guards) and provides
-also an implementation of an [Error Catcher](https://rocket.rs/v0.5-rc/guide/requests/#error-catchers).  
-The Error Catcher can be registered on any path to handle [`Status::TooManyRequests`](https://api.rocket.rs/v0.5-rc/rocket/http/struct.Status.html#associatedconstant.TooManyRequests) and provide HTTP headers in the response.
-
-## Usage
-
-Add dependencies to [rocket-governor](https://crates.io/crates/rocket-governor) and [rocket-governor-derive](https://crates.io/crates/rocket-governor-derive) crates to your _Cargo.toml_.
-
-Implement `RocketGovernable` for a _guard struct_ which derives from `RocketGovernor`: 
-
-```rust
-use rocket_governor::{Method, Quota, RocketGovernable};
-use rocket_governor_derive::{RocketGovernor, RocketGovernorWithMember};
-
-
-#[derive(RocketGovernor)]
-pub struct RateLimitGuard;
-
-impl<'r> RocketGovernable<'r> for RateLimitGuard {
-    fn quota(_method: Method, _route_name: &str) -> Quota {
-        Quota::per_second(Self::nonzero(1u32))
-    }
-}
-```
-
-This requires to implement the method `fn quota(_: Method, _: &str) -> Quota`.  
-You can vary your `Quota` on any combination of __method__ and __route_name__, but the returned `Quota` should be a _static-like_. It should __not change__ between invocations of the `quota()`-method with equal parameters.
-
-If your struct has members, there is an alternative `derive` which requires to implement [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html):
-
-```rust
-#[derive(RocketGovernorWithMember)]
-pub struct RateLimitGuardWithMember {
-    pub member: u8,
-}
-
-impl<'r> RocketGovernable<'r> for RateLimitGuardWithMember {
-    fn quota(_method: Method, _route_name: &str) -> Quota {
-        Quota::with_period(Duration::from_secs(2u64)).unwrap()
-    }
-}
-
-impl Default for RateLimitGuardWithMember {
-    fn default() -> Self {
-        Self { member: 254u8 }
-    }
-}
-```
-
-There is a small helper function `nonzero(u32)` for creating Quotas in your `quota()`-implementation e.g.:
-```rust
-    Quota::per_second(Self::nonzero(1u32))
-```
-
-After implementing the minimal requirements of the derived struct you can add your _Guard_ to your route-methods like:
-
-```rust
-#[get("/")]
-fn route_test(_limitguard: RateLimitGuard) -> Status {
-    Status::Ok
-}
-```
-
-### Register Catcher
-
-To handle HTTP Status 429 TooManyRequests there is an catcher-function implementation.
-
-It is __called__ like your __*`struct`-name*__ in __lowercase__ with the extension __*_rocket_governor_catcher*__.  
-So in this usage example there exist two catcher-functions `ratelimitguard_rocket_governor_catcher()` and `ratelimitguardwithmember_rocket_governor_catcher()`.
-
-Register it with `register(<path>, <catchers>)`-method of Rocket:
-
-```rust
-#[launch]
-fn launch_rocket() -> _ {
-    rocket::build()
-        .mount("/", routes![route_test])
-        .register("/", catchers!(ratelimitguard_rocket_governor_catcher))
-}
-```
-
-### Additional information
-
-To understand the basics of Rocket, please visit the _Rocket Guide_:
-* https://rocket.rs/v0.5-rc/guide/requests/#request-guards
-* https://rocket.rs/v0.5-rc/guide/requests/#error-catchers
+This repository and its crate is unmaintained and is __completely replaced__ by only its partner repository
+[kolbma/rocket-governor](https://github.com/kolbma/rocket-governor)!!!
 
 ## Licenses
 
